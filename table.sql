@@ -10,10 +10,47 @@ CREATE TABLE votes (
 
     CONSTRAINT FK_Poll_Votes FOREIGN KEY (poll_id) REFERENCES polls(id) ON DELETE CASCADE
 );
+--新增投票選項
 INSERT INTO polls (title, [voteCount]) VALUES ('Best Programming Language', 0);
 INSERT INTO polls (title, [voteCount]) VALUES ('Favorite Database', 0);
-
+--新增投票明細
 INSERT INTO votes (poll_id, voter) VALUES (1, 'Alice');
 INSERT INTO votes (poll_id, voter) VALUES (1, 'Bob');
 INSERT INTO votes (poll_id, voter) VALUES (2, 'Charlie');
 INSERT INTO votes (poll_id, voter) VALUES (2, 'Dave');
+
+
+
+--==================================
+
+
+CREATE PROCEDURE InsertPoll
+    @Title NVARCHAR(255),
+    @VoteCount BIGINT = 0
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    INSERT INTO polls (title, [voteCount])
+    VALUES (@Title, @VoteCount);
+
+    SELECT SCOPE_IDENTITY() AS NewPollId; -- 返回新插入的 Poll ID
+END;
+--==================================
+CREATE PROCEDURE InsertVote
+    @PollId BIGINT,
+    @Voter NVARCHAR(255)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    INSERT INTO votes (poll_id, voter)
+    VALUES (@PollId, @Voter);
+
+    -- 更新对应 Poll 的 vote_count
+    UPDATE polls
+    SET vote_count = vote_count + 1
+    WHERE id = @PollId;
+
+    SELECT SCOPE_IDENTITY() AS NewVoteId; -- 返回新插入的 Vote ID
+END;
