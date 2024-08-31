@@ -10,3 +10,10 @@ CREATE TABLE votes (
 
     CONSTRAINT FK_Poll_Votes FOREIGN KEY (poll_id) REFERENCES polls(id) ON DELETE CASCADE
 );
+INSERT INTO polls (title, [voteCount]) VALUES ('Best Programming Language', 0);
+INSERT INTO polls (title, [voteCount]) VALUES ('Favorite Database', 0);
+
+INSERT INTO votes (poll_id, voter) VALUES (1, 'Alice');
+INSERT INTO votes (poll_id, voter) VALUES (1, 'Bob');
+INSERT INTO votes (poll_id, voter) VALUES (2, 'Charlie');
+INSERT INTO votes (poll_id, voter) VALUES (2, 'Dave');
